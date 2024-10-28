@@ -7,8 +7,11 @@ app.use(cors());  // To allow cross-origin requests
 
 const db = require("./models");
 
-const posts = require("./routes/Posts");
-app.use("/posts", posts);
+const postRouter = require("./routes/Posts");
+app.use("/posts", postRouter);
+
+const commentsRouter = require("./routes/Comments");
+app.use("/comments", commentsRouter);
 
 db.sequelize.sync().then(() => {
   app.listen(3001, () => {
