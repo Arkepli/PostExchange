@@ -3,7 +3,6 @@ import * as Yup from "yup";
 import axios from "axios";
 
 function Registration() {
-
   const initialValues = {
     username: "",
     password: "",
