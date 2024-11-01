@@ -8,11 +8,15 @@ import Registration from "./pages/Registration";
 import { AuthContext } from "./helpers/AuthContext";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import PageNotFound from "./pages/PageNotFound";
 
 //The context API is used here.
 function App() {
-
-  const [authState, setAuthState] = useState({username: "", id: 0, status: false});
+  const [authState, setAuthState] = useState({
+    username: "",
+    id: 0,
+    status: false,
+  });
 
   useEffect(() => {
     axios
@@ -25,13 +29,11 @@ function App() {
         if (response.data.error) {
           setAuthState({ ...authState, status: false });
         } else {
-          setAuthState(
-            {
-              username: response.data.username,
-              id: response.data.id,
-              status: true,
-            }
-          );
+          setAuthState({
+            username: response.data.username,
+            id: response.data.id,
+            status: true,
+          });
         }
       });
   }, []);
@@ -44,26 +46,31 @@ function App() {
   return (
     <div className="App">
       <AuthContext.Provider value={{ authState, setAuthState }}>
-      <Router>
-        <div className="navbar">
-        <Link to="/CreatePost"> Create A Post </Link>
-        <Link to="/"> Home Page </Link>
-           {!authState.status ? (
+        <Router>
+          <div className="navbar">
+            {!authState.status ? (
               <>
                 <Link to="/registration"> Registration</Link>
-                <Link to="/login"> Login</Link> 
+                <Link to="/login"> Login</Link>
               </>
-            ) : <button onClick={logout}> Logout </button>}
+            ) : (
+              <>
+                <Link to="/CreatePost"> Create A Post </Link>
+                <Link to="/"> Home Page </Link>
+                <button onClick={logout}> Logout </button>
+              </> 
+            )}
             <h1>{authState.username} </h1>
-        </div>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/CreatePost" element={<CreatePosts />} />
-          <Route path="/Post/:id" element={<Post />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/registration" element={<Registration />} />
-        </Routes>
-      </Router>
+          </div>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/CreatePost" element={<CreatePosts />} />
+            <Route path="/Post/:id" element={<Post />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registration" element={<Registration />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </Router>
       </AuthContext.Provider>
     </div>
   );
